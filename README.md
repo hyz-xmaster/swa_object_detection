@@ -1,153 +1,133 @@
-<div align="center">
-  <img src="resources/mmdet-logo.png" width="600"/>
-</div>
+# SWA Object Detection
 
-**News**: We released the technical report on [ArXiv](https://arxiv.org/abs/1906.07155).
+This project hosts the scripts for training SWA object detectors, as presented in our paper:
 
-Documentation: https://mmdetection.readthedocs.io/
+```
+@article{zhang2020swa,
+  title={SWA Object Detection},
+  author={Zhang, Haoyang and Wang, Ying and Dayoub, Feras and S{\"u}nderhauf, Niko},
+  journal={arXiv preprint arXiv:2012.xxxxx},
+  year={2020}
+}
+```
+The full paper is available at: [https://arxiv.org/abs/2012.xxxxx](https://arxiv.org/abs/xxxxxxxx).
 
 ## Introduction
+Do you want to improve 1.0 AP for your object detector without any inference cost and any change to your detector? Let us tell you such a recipe. It is surprisingly simple: **train your detector for an extra 12 epochs using cyclical learning rates and then average these 12 checkpoints as your final detection model**. This potent recipe is inspired by Stochastic Weights Averaging (**SWA**), which is proposed in [1] for improving generalization in deep neural networks. We found it also very effective in object detection. In this work, we systematically investigate the effects of applying SWA to object detection as well as instance segmentation. Through extensive experiments, we discover a good policy of performing SWA in object detection, and we consistently achieve ~1.0 AP improvement over various popular detectors on the challenging COCO benchmark. We hope this work will make more researchers in object detection know this technique and help them train better object detectors.
 
-MMDetection is an open source object detection toolbox based on PyTorch. It is
-a part of the OpenMMLab project developed by [Multimedia Laboratory, CUHK](http://mmlab.ie.cuhk.edu.hk/).
 
-The master branch works with **PyTorch 1.3 to 1.6**.
-The old v1.x branch works with PyTorch 1.1 to 1.4, but v2.0 is strongly recommended for faster speed, higher performance, better design and more friendly usage.
+<div align="center">
+  <img src="swa.png" width="600px" />
+  <p>SWA Object Detection: averaging multiple detection models leads to a better one.</p>
+</div>
 
-![demo image](resources/coco_test_12510.jpg)
 
-### Major features
+## Updates
+- **2020.12.24** Release the code.
 
-- **Modular Design**
 
-  We decompose the detection framework into different components and one can easily construct a customized object detection framework by combining different modules.
-
-- **Support of multiple frameworks out of box**
-
-  The toolbox directly supports popular and contemporary detection frameworks, *e.g.* Faster RCNN, Mask RCNN, RetinaNet, etc.
-
-- **High efficiency**
-
-  All basic bbox and mask operations run on GPUs. The training speed is faster than or comparable to other codebases, including [Detectron2](https://github.com/facebookresearch/detectron2), [maskrcnn-benchmark](https://github.com/facebookresearch/maskrcnn-benchmark) and [SimpleDet](https://github.com/TuSimple/simpledet).
-
-- **State of the art**
-
-  The toolbox stems from the codebase developed by the *MMDet* team, who won [COCO Detection Challenge](http://cocodataset.org/#detection-leaderboard) in 2018, and we keep pushing it forward.
-
-Apart from MMDetection, we also released a library [mmcv](https://github.com/open-mmlab/mmcv) for computer vision research, which is heavily depended on by this toolbox.
-
-## License
-
-This project is released under the [Apache 2.0 license](LICENSE).
-
-## Changelog
-
-v2.7.0 was released in 30/11/2020.
-Please refer to [changelog.md](docs/changelog.md) for details and release history.
-A comparison between v1.x and v2.0 codebases can be found in [compatibility.md](docs/compatibility.md).
-
-## Benchmark and model zoo
-
-Results and models are available in the [model zoo](docs/model_zoo.md).
-
-Supported backbones:
-- [x] ResNet
-- [x] ResNeXt
-- [x] VGG
-- [x] HRNet
-- [x] RegNet
-- [x] Res2Net
-- [x] ResNeSt
-
-Supported methods:
-- [x] [RPN](configs/rpn)
-- [x] [Fast R-CNN](configs/fast_rcnn)
-- [x] [Faster R-CNN](configs/faster_rcnn)
-- [x] [Mask R-CNN](configs/mask_rcnn)
-- [x] [Cascade R-CNN](configs/cascade_rcnn)
-- [x] [Cascade Mask R-CNN](configs/cascade_rcnn)
-- [x] [SSD](configs/ssd)
-- [x] [RetinaNet](configs/retinanet)
-- [x] [GHM](configs/ghm)
-- [x] [Mask Scoring R-CNN](configs/ms_rcnn)
-- [x] [Double-Head R-CNN](configs/double_heads)
-- [x] [Hybrid Task Cascade](configs/htc)
-- [x] [Libra R-CNN](configs/libra_rcnn)
-- [x] [Guided Anchoring](configs/guided_anchoring)
-- [x] [FCOS](configs/fcos)
-- [x] [RepPoints](configs/reppoints)
-- [x] [Foveabox](configs/foveabox)
-- [x] [FreeAnchor](configs/free_anchor)
-- [x] [NAS-FPN](configs/nas_fpn)
-- [x] [ATSS](configs/atss)
-- [x] [FSAF](configs/fsaf)
-- [x] [PAFPN](configs/pafpn)
-- [x] [Dynamic R-CNN](configs/dynamic_rcnn)
-- [x] [PointRend](configs/point_rend)
-- [x] [CARAFE](configs/carafe/README.md)
-- [x] [DCNv2](configs/dcn/README.md)
-- [x] [Group Normalization](configs/gn/README.md)
-- [x] [Weight Standardization](configs/gn+ws/README.md)
-- [x] [OHEM](configs/faster_rcnn/faster_rcnn_r50_fpn_ohem_1x_coco.py)
-- [x] [Soft-NMS](configs/faster_rcnn/faster_rcnn_r50_fpn_soft_nms_1x_coco.py)
-- [x] [Generalized Attention](configs/empirical_attention/README.md)
-- [x] [GCNet](configs/gcnet/README.md)
-- [x] [Mixed Precision (FP16) Training](configs/fp16/README.md)
-- [x] [InstaBoost](configs/instaboost/README.md)
-- [x] [GRoIE](configs/groie/README.md)
-- [x] [DetectoRS](configs/detectors/README.md)
-- [x] [Generalized Focal Loss](configs/gfl/README.md)
-- [x] [CornerNet](configs/cornernet/README.md)
-- [x] [Side-Aware Boundary Localization](configs/sabl/README.md)
-- [x] [YOLOv3](configs/yolo/README.md)
-- [x] [PAA](configs/paa/README.md)
-- [x] [YOLACT](configs/yolact/README.md)
-- [x] [CentripetalNet](configs/centripetalnet/README.md)
-- [x] [VFNet](configs/vfnet/README.md)
-- [x] [DETR](configs/detr/README.md)
-
-Some other methods are also supported in [projects using MMDetection](./docs/projects.md).
 
 ## Installation
+- This project is based on [MMDetection](https://github.com/open-mmlab/mmdetection). Therefore the installation is the same as original MMDetection.
 
-Please refer to [get_started.md](docs/get_started.md) for installation.
+- Please check [get_started.md](docs/get_started.md) for installation. Note that you should change the version of PyTorch and CUDA to yours when installing **mmcv** in `step 3` and clone this repo instead of MMdetection in `step 4`.
 
-## Getting Started
+- If you run into problems with `pycocotools`, please install it by:
 
-Please see [get_started.md](docs/get_started.md) for the basic usage of MMDetection.
-We provide [colab tutorial](demo/MMDet_Tutorial.ipynb), and full guidance for quick run [with existing dataset](docs/1_exist_data_model.md) and [with new dataset](docs/2_new_data_model.md) for beginners.
+  ```
+  pip install "git+https://github.com/open-mmlab/cocoapi.git#subdirectory=pycocotools"
+  ```
+
+## Usage of MMDetection
+MMDetection provides [colab tutorial](demo/MMDet_Tutorial.ipynb), and full guidance for quick run [with existing dataset](docs/1_exist_data_model.md) and [with new dataset](docs/2_new_data_model.md) for beginners.
 There are also tutorials for [finetuning models](docs/tutorials/finetune.md), [adding new dataset](docs/tutorials/new_dataset.md), [designing data pipeline](docs/tutorials/data_pipeline.md), [customizing models](docs/tutorials/customize_models.md), [customizing runtime settings](docs/tutorials/customize_runtime.md) and [useful tools](docs/useful_tools.md).
 
 Please refer to [FAQ](docs/faq.md) for frequently asked questions.
 
+
+## Getting Started
+In this project, we mainly provide config files and helper scripts for training SWA object detectors. The config files are located in the [configs/swa directory](configs/swa) and the helper scripts in the [swa directory](swa).
+
+We take training SWA Mask RCNN as an example to describe how to train an SWA object detector as well as evaluate it.
+- Download the [pre-trained MaskRCNN-R101-2x-0.02-0.0002-40.8-36.6](http://download.openmmlab.com/mmdetection/v2.0/mask_rcnn/mask_rcnn_r101_fpn_2x_coco/mask_rcnn_r101_fpn_2x_coco_bbox_mAP-0.408__segm_mAP-0.366_20200505_071027-14b391c7.pth) from [Mask RCNN Model Zoo](configs/mask_rcnn/README.md) into the [checkpoints directory](checkpoints/mask_rcnn). This model achieves 40.8 bbox AP and 36.6 mask AP on the COCO val2017.
+
+- Run the command below to start the training with the config file [swa_mask_rcnn_r101_fpn_2x_coco.py](configs/swa/swa_mask_rcnn_r101_fpn_2x_coco.py)
+  ```
+  ./tools/dist_train.sh configs/swa/swa_mask_rcnn_r101_fpn_2x_coco.py 8 --cfg-options load_from=checkpoints/mask_rcnn/mask_rcnn_r101_fpn_2x_coco_bbox_mAP-0.408__segm_mAP-0.366_20200505_071027-14b391c7.pth work_dir=work_dirs/swa_mask_rcnn_r101_fpn_2x_coco
+
+  ```
+  In this config file, we use the cyclical learning rate schedule for training. We set the upper bound of cyclical learning rates as the initial learning rate of the pre-trained model, i.e. 1x0.02 in this case, and the lower bound as 0.01x0.02 = 0.0002, through configuring `target_ratio=(1, 0.01)`. The cycle length is 1 epoch as `cyclic_times=24` for total 24 epochs.  This training starts from the previously downloaded pre-trained model and checkpoints are saved in `work_dirs/swa_mask_rcnn_r101_fpn_2x_coco`.
+
+- When the training is finished, run the script [get_swa_model.py](swa/get_swa_model.py) to get the final SWA model.
+  ```
+  ./swa/get_swa_model.py work_dirs/swa_mask_rcnn_r101_fpn_2x_coco 1 12 --save_dir work_dirs/swa_mask_rcnn
+
+  ```
+
+  The average model swa_1-12.pth will be saved in `work_dirs/swa_mask_rcnn`.
+
+- Finally, evaluate the SWA model on the COCO val2017:
+  ```
+  ./tools/test.py configs/swa/swa_mask_rcnn_r101_fpn_2x_coco.py work_dirs/swa_mask_rcnn/swa_1-12.pth --eval bbox segm
+
+  ```
+  You are likely to get the result of 41.7 bbox AP and 37.4 mask AP, which are higher than the performance of the original model by 0.9 bbox AP and 0.8 mask AP respectively.
+
+If you would like to train other SWA object detectors, you only need to download related pre-trained models and follow the steps above with making corresponding changes to the commands. If you are interested in training an SWA object detector from scratch, please refer to the last paragraph of Section 3.1 in our paper.
+
+
+
+## Results and Models
+For your convenience, we provide the following SWA models. These models are obtained by averaging checkpoints that are trained with cyclical learning rates for 12 epochs.
+
+| Model                                             | bbox AP (val)     | segm AP  (val)      | &nbsp; &nbsp; Download  &nbsp; &nbsp;  |
+|:-------------------------------------------------:|:-----------------:|:------------------ :|:--------------------------------------:|
+| SWA-MaskRCNN-R50-1x-0.02-0.0002-38.2-34.7         | 39.1, +0.9        | 35.5, +0.8          | [model](https://drive.google.com/file/d/1Pue5dYW_JkQXwRQmBSeSX6cVluVBQYFB/view?usp=sharing) &#124; [config](configs/swa/swa_mask_rcnn_r50_fpn_1x_coco.py)|
+| SWA-MaskRCNN-R101-1x-0.02-0.0002-40.0-36.1        | 41.0, +1.0        | 37.0, +0.9          | [model](https://drive.google.com/file/d/1_qAfKqs4aNND_IjWUMyirV7e9MVpFiHy/view?usp=sharing) &#124; [config](configs/swa/swa_mask_rcnn_r101_fpn_1x_coco.py)|
+| SWA-MaskRCNN-R101-2x-0.02-0.0002-40.8-36.6        | 41.7, +0.9        | 37.4, +0.8          | [model](https://drive.google.com/file/d/1i1NjfU9F-GdUBc-nRcJ60Ap1BfS-avyH/view?usp=sharing) &#124; [config](configs/swa/swa_mask_rcnn_r101_fpn_2x_coco.py)|
+| SWA-FasterRCNN-R50-1x-0.02-0.0002-37.4            | 38.4, +1.0        | -                   | [model](https://drive.google.com/file/d/1wbPDsas-nmBvctsebGa05I33-iP2kCyV/view?usp=sharing) &#124; [config](configs/swa/swa_faster_rcnn_r50_fpn_1x_coco.py)|
+| SWA-FasterRCNN-R101-1x-0.02-0.0002-39.4           | 40.3, +0.9        | -                   | [model](https://drive.google.com/file/d/112CzQ5nCTz_RkDSkGdbCT3pmu3ajsvxT/view?usp=sharing) &#124; [config](configs/swa/swa_faster_rcnn_r101_fpn_1x_coco.py)|
+| SWA-FasterRCNN-R101-2x-0.02-0.0002-39.8           | 40.7, +0.9        | -                   | [model](https://drive.google.com/file/d/1hTS5cVebeDaC16W3laRvAtog5a3ZPFZF/view?usp=sharing) &#124; [config](configs/swa/swa_faster_rcnn_r101_fpn_2x_coco.py)|
+| SWA-RetinaNet-R50-1x-0.01-0.0001-36.5             | 37.8, +1.3        | -                   | [model](https://drive.google.com/file/d/1IYVpS6AsfXzwTM80P2ZaWS-u1FXa63Xd/view?usp=sharing) &#124; [config](configs/swa/swa_retinanet_r50_fpn_1x_coco.py)|
+| SWA-RetinaNet-R101-1x-0.01-0.0001-38.5            | 39.7, +1.2        | -                   | [model](https://drive.google.com/file/d/1UMLmqwJ29DFOr52JJp_sTD5Tx5nzmFO2/view?usp=sharing) &#124; [config](configs/swa/swa_retinanet_r101_fpn_1x_coco.py)|
+| SWA-RetinaNet-R101-2x-0.01-0.0001-38.9            | 40.0, +1.1        | -                   | [model](https://drive.google.com/file/d/11Z4Vnm8175WM6xy-0qu_1KPhoWAEPhH8/view?usp=sharing) &#124; [config](configs/swa/swa_retinanet_r101_fpn_2x_coco.py)|
+| SWA-FCOS-R50-1x-0.01-0.0001-36.6                  | 38.0, +1.4        | -                   | [model](https://drive.google.com/file/d/1xgxXYYT3p-Azv5PnXMrPAKBtN1VhvBWz/view?usp=sharing) &#124; [config](configs/swa/swa_fcos_r50_caffe_fpn_4x4_1x_coco.py)|
+| SWA-FCOS-R101-1x-0.01-0.0001-39.2                 | 40.3, +1.2        | -                   | [model](https://drive.google.com/file/d/1GYx79UpPaL321Va0jSZ4DDWkms00pMs0/view?usp=sharing) &#124; [config](configs/swa/swa_fcos_r101_caffe_fpn_gn-head_4x4_1x_coco.py)|
+| SWA-FCOS-R101-2x-0.01-0.0001-39.1                 | 40.2, +1.1        | -                   | [model](https://drive.google.com/file/d/1yiyeXSkuFMq0FVvrjJkcN72etd1p3gKp/view?usp=sharing) &#124; [config](configs/swa/swa_fcos_r101_caffe_fpn_gn-head_4x4_2x_coco.py)|
+| SWA-YOLOv3(320)-D53-273e-0.001-0.00001-27.9       | 28.7, +0.8        | -                   | [model](https://drive.google.com/file/d/1pZS52yHoQVh6kybV9D83bvzsSIN_wFvh/view?usp=sharing) &#124; [config](configs/swa/swa_yolov3_d53_320_273e_coco.py)|
+| SWA-YOLOv3(680)-D53-273e-0.001-0.00001-33.4       | 34.2, +0.8        | -                   | [model](https://drive.google.com/file/d/1FQd0oWsk18VKUv40ywtYe4G0SiYpqKZ7/view?usp=sharing) &#124; [config](configs/swa/swa_yolov3_d53_mstrain-608_273e_coco.py)|
+| SWA-VFNet-R50-1x-0.01-0.0001-41.6                 | 42.8, +1.2        | -                   | [model](https://drive.google.com/file/d/15nRdpQqjiCzuvLYytdJg86g9x4tQ8cCo/view?usp=sharing) &#124; [config](configs/swa/swa_vfnet_r50_fpn_1x_coco.py)|
+| SWA-VFNet-R101-1x-0.01-0.0001-43.0                | 44.3, +1.3        | -                   | [model](https://drive.google.com/file/d/13tGeJBqzS1ITAaESMMDAaEHMrSJvA0g2/view?usp=sharing) &#124; [config](configs/swa/swa_vfnet_r101_fpn_1x_coco.py)|
+| SWA-VFNet-R101-2x-0.01-0.0001-43.5                | 44.5, +1.0        | -                   | [model](https://drive.google.com/file/d/1rJm0tcxWIjCDl6Np7MPR3OE6mwUDWwh0/view?usp=sharing) &#124; [config](configs/swa/swa_vfnet_r101_fpn_2x_coco.py)|
+
+
+
+**Notes:**
+- SWA-MaskRCNN-R50-1x-0.02-0.0002-38.2-34.7 means this SWA model is produced based on the pre-trained Mask RCNN model that has a ResNet50 backbone, is trained under 1x schedule with the initial learning rate 0.02 and ending learning rate 0.0002, and achieves 38.2 bbox AP and 34.7 mask AP on the COCO val2017 respectively. This SWA model acheives 39.1 bbox AP and 35.5 mask AP, which are higher than the pre-trained model by 0.9 bbox AP and mask 0.8 AP respectively. This rule applies to other object detectors.
+
+
 ## Contributing
+Any pull requests or issues are welcome.
 
-We appreciate all contributions to improve MMDetection. Please refer to [CONTRIBUTING.md](.github/CONTRIBUTING.md) for the contributing guideline.
-
-## Acknowledgement
-
-MMDetection is an open source project that is contributed by researchers and engineers from various colleges and companies. We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks.
-We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new detectors.
 
 ## Citation
-
-If you use this toolbox or benchmark in your research, please cite this project.
-
+Please consider citing our paper in your publications if the project helps your research. BibTeX reference is as follows:
 ```
-@article{mmdetection,
-  title   = {{MMDetection}: Open MMLab Detection Toolbox and Benchmark},
-  author  = {Chen, Kai and Wang, Jiaqi and Pang, Jiangmiao and Cao, Yuhang and
-             Xiong, Yu and Li, Xiaoxiao and Sun, Shuyang and Feng, Wansen and
-             Liu, Ziwei and Xu, Jiarui and Zhang, Zheng and Cheng, Dazhi and
-             Zhu, Chenchen and Cheng, Tianheng and Zhao, Qijie and Li, Buyu and
-             Lu, Xin and Zhu, Rui and Wu, Yue and Dai, Jifeng and Wang, Jingdong
-             and Shi, Jianping and Ouyang, Wanli and Loy, Chen Change and Lin, Dahua},
-  journal= {arXiv preprint arXiv:1906.07155},
-  year={2019}
+@article{zhang2020swa,
+  title={SWA Object Detection},
+  author={Zhang, Haoyang and Wang, Ying and Dayoub, Feras and S{\"u}nderhauf, Niko},
+  journal={arXiv preprint arXiv:2012.xxxxx},
+  year={2020}
 }
 ```
 
-## Contact
+# Acknowledgment
+Many thanks to [Dr Marlies Hankel](https://aibn.uq.edu.au/profile/2882/marlies-hankel) and [MASSIVE HPC](https://www.massive.org.au/) for supporting precious GPU computation resources!
 
-This repo is currently maintained by Kai Chen ([@hellock](http://github.com/hellock)), Yuhang Cao ([@yhcao6](https://github.com/yhcao6)), Wenwei Zhang ([@ZwwWayne](https://github.com/ZwwWayne)),
-Jiarui Xu ([@xvjiarui](https://github.com/xvjiarui)). Other core developers include Jiangmiao Pang ([@OceanPang](https://github.com/OceanPang)) and Jiaqi Wang ([@myownskyW7](https://github.com/myownskyW7)).
+We also would like to thank MMDetection team for producing this great object detection toolbox.
+
+## License
+This project is released under the [Apache 2.0 license](LICENSE).
+
+## References
+[1] Averaging Weights Leads to Wider Optima and Better Generalization; Pavel Izmailov, Dmitry Podoprikhin, Timur Garipov, Dmitry Vetrov, Andrew Gordon Wilson; Uncertainty in Artificial Intelligence (UAI), 2018
