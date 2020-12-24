@@ -106,6 +106,8 @@ For your convenience, we provide the following SWA models. These models are obta
 **Notes:**
 - SWA-MaskRCNN-R50-1x-0.02-0.0002-38.2-34.7 means this SWA model is produced based on the pre-trained Mask RCNN model that has a ResNet50 backbone, is trained under 1x schedule with the initial learning rate 0.02 and ending learning rate 0.0002, and achieves 38.2 bbox AP and 34.7 mask AP on the COCO val2017 respectively. This SWA model acheives 39.1 bbox AP and 35.5 mask AP, which are higher than the pre-trained model by 0.9 bbox AP and mask 0.8 AP respectively. This rule applies to other object detectors.
 
+- In addition to these baseline detectors, SWA can also improve more powerful detectors. One example is [VFNetX](https://github.com/hyz-xmaster/VarifocalNet#vfnetx) whose performance on the COCO val2017 is improved from 52.2 AP to 53.4 AP (+1.2 AP).
+
 
 ## Contributing
 Any pull requests or issues are welcome.
