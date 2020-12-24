@@ -6,11 +6,11 @@ This project hosts the scripts for training SWA object detectors, as presented i
 @article{zhang2020swa,
   title={SWA Object Detection},
   author={Zhang, Haoyang and Wang, Ying and Dayoub, Feras and S{\"u}nderhauf, Niko},
-  journal={arXiv preprint arXiv:2012.xxxxx},
+  journal={arXiv preprint arXiv:2012.12645},
   year={2020}
 }
 ```
-The full paper is available at: [https://arxiv.org/abs/2012.xxxxx](https://arxiv.org/abs/xxxxxxxx).
+The full paper is available at: [https://arxiv.org/abs/2012.12645](https://arxiv.org/abs/2012.12645).
 
 ## Introduction
 Do you want to improve 1.0 AP for your object detector without any inference cost and any change to your detector? Let us tell you such a recipe. It is surprisingly simple: **train your detector for an extra 12 epochs using cyclical learning rates and then average these 12 checkpoints as your final detection model**. This potent recipe is inspired by Stochastic Weights Averaging (**SWA**), which is proposed in [1] for improving generalization in deep neural networks. We found it also very effective in object detection. In this work, we systematically investigate the effects of applying SWA to object detection as well as instance segmentation. Through extensive experiments, we discover a good policy of performing SWA in object detection, and we consistently achieve ~1.0 AP improvement over various popular detectors on the challenging COCO benchmark. We hope this work will make more researchers in object detection know this technique and help them train better object detectors.
@@ -117,7 +117,7 @@ Please consider citing our paper in your publications if the project helps your 
 @article{zhang2020swa,
   title={SWA Object Detection},
   author={Zhang, Haoyang and Wang, Ying and Dayoub, Feras and S{\"u}nderhauf, Niko},
-  journal={arXiv preprint arXiv:2012.xxxxx},
+  journal={arXiv preprint arXiv:2012.12645},
   year={2020}
 }
 ```
