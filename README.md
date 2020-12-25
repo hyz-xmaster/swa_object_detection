@@ -93,7 +93,7 @@ For your convenience, we provide the following SWA models. These models are obta
 | SWA-RetinaNet-R101-1x-0.01-0.0001-38.5            | 39.7, +1.2        | -                   | [model](https://drive.google.com/file/d/1UMLmqwJ29DFOr52JJp_sTD5Tx5nzmFO2/view?usp=sharing) &#124; [config](configs/swa/swa_retinanet_r101_fpn_1x_coco.py) |
 | SWA-RetinaNet-R101-2x-0.01-0.0001-38.9            | 40.0, +1.1        | -                   | [model](https://drive.google.com/file/d/11Z4Vnm8175WM6xy-0qu_1KPhoWAEPhH8/view?usp=sharing) &#124; [config](configs/swa/swa_retinanet_r101_fpn_2x_coco.py) |
 | SWA-FCOS-R50-1x-0.01-0.0001-36.6                  | 38.0, +1.4        | -                   | [model](https://drive.google.com/file/d/1xgxXYYT3p-Azv5PnXMrPAKBtN1VhvBWz/view?usp=sharing) &#124; [config](configs/swa/swa_fcos_r50_caffe_fpn_4x4_1x_coco.py) |
-| SWA-FCOS-R101-1x-0.01-0.0001-39.2                 | 40.3, +1.2        | -                   | [model](https://drive.google.com/file/d/1GYx79UpPaL321Va0jSZ4DDWkms00pMs0/view?usp=sharing) &#124; [config](configs/swa/swa_fcos_r101_caffe_fpn_gn-head_4x4_1x_coco.py) |
+| SWA-FCOS-R101-1x-0.01-0.0001-39.2                 | 40.3, +1.1        | -                   | [model](https://drive.google.com/file/d/1GYx79UpPaL321Va0jSZ4DDWkms00pMs0/view?usp=sharing) &#124; [config](configs/swa/swa_fcos_r101_caffe_fpn_gn-head_4x4_1x_coco.py) |
 | SWA-FCOS-R101-2x-0.01-0.0001-39.1                 | 40.2, +1.1        | -                   | [model](https://drive.google.com/file/d/1yiyeXSkuFMq0FVvrjJkcN72etd1p3gKp/view?usp=sharing) &#124; [config](configs/swa/swa_fcos_r101_caffe_fpn_gn-head_4x4_2x_coco.py) |
 | SWA-YOLOv3(320)-D53-273e-0.001-0.00001-27.9       | 28.7, +0.8        | -                   | [model](https://drive.google.com/file/d/1pZS52yHoQVh6kybV9D83bvzsSIN_wFvh/view?usp=sharing) &#124; [config](configs/swa/swa_yolov3_d53_320_273e_coco.py) |
 | SWA-YOLOv3(680)-D53-273e-0.001-0.00001-33.4       | 34.2, +0.8        | -                   | [model](https://drive.google.com/file/d/1FQd0oWsk18VKUv40ywtYe4G0SiYpqKZ7/view?usp=sharing) &#124; [config](configs/swa/swa_yolov3_d53_mstrain-608_273e_coco.py) |
@@ -104,10 +104,11 @@ For your convenience, we provide the following SWA models. These models are obta
 
 
 **Notes:**
-- SWA-MaskRCNN-R50-1x-0.02-0.0002-38.2-34.7 means this SWA model is produced based on the pre-trained Mask RCNN model that has a ResNet50 backbone, is trained under 1x schedule with the initial learning rate 0.02 and ending learning rate 0.0002, and achieves 38.2 bbox AP and 34.7 mask AP on the COCO val2017 respectively. This SWA model acheives 39.1 bbox AP and 35.5 mask AP, which are higher than the pre-trained model by 0.9 bbox AP and mask 0.8 AP respectively. This rule applies to other object detectors.
+- SWA-MaskRCNN-R50-1x-0.02-0.0002-38.2-34.7 means this SWA model is produced based on the pre-trained Mask RCNN model that has a ResNet50 backbone, is trained under 1x schedule with the initial learning rate 0.02 and ending learning rate 0.0002, and achieves 38.2 bbox AP and 34.7 mask AP on the COCO val2017 respectively. This SWA model acheives 39.1 bbox AP and 35.5 mask AP, which are higher than the pre-trained model by 0.9 bbox AP and 0.8 mask AP respectively. This rule applies to other object detectors.
 
 - In addition to these baseline detectors, SWA can also improve more powerful detectors. One example is [VFNetX](https://github.com/hyz-xmaster/VarifocalNet#vfnetx) whose performance on the COCO val2017 is improved from 52.2 AP to 53.4 AP (+1.2 AP).
 
+- More detailed results including AP<sub>50</sub> and AP<sub>75</sub> can be found [here](configs/swa/README.md).
 
 ## Contributing
 Any pull requests or issues are welcome.
