@@ -1,4 +1,4 @@
-_base_ = '../yolo/yolov3_d53_mstrain-608_273e_coco.py'
+_base_ = ['../yolo/yolov3_d53_mstrain-608_273e_coco.py', '../_base_/swa.py']
 # dataset settings
 img_norm_cfg = dict(mean=[0, 0, 0], std=[255., 255., 255.], to_rgb=True)
 train_pipeline = [
@@ -40,10 +40,20 @@ data = dict(
     train=dict(pipeline=train_pipeline),
     val=dict(pipeline=test_pipeline),
     test=dict(pipeline=test_pipeline))
+# optimizer
+optimizer = dict(type='SGD', lr=0.001, momentum=0.9, weight_decay=0.0005)
+optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
+# learning policy
 lr_config = dict(
-    _delete_=True,
-    policy='cyclic',
-    target_ratio=(1, 0.01),
-    cyclic_times=24,
-    step_ratio_up=0.0)
-total_epochs = 24
+    policy='step',
+    warmup='linear',
+    warmup_iters=2000,  # same as burn-in in darknet
+    warmup_ratio=0.1,
+    step=[218, 246])
+# runtime settings
+total_epochs = 273
+
+# swa optimizer
+swa_optimizer = dict(type='SGD', lr=0.001, momentum=0.9, weight_decay=0.0005)
+swa_optimizer_config = dict(
+    _delete_=True, grad_clip=dict(max_norm=35, norm_type=2))

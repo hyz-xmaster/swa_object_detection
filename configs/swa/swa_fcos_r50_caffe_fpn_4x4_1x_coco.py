@@ -1,6 +1,7 @@
 _base_ = [
     '../_base_/datasets/coco_detection.py',
-    '../_base_/schedules/schedule_1x.py', '../_base_/default_runtime.py'
+    '../_base_/schedules/schedule_1x.py', '../_base_/default_runtime.py',
+    '../_base_/swa.py'
 ]
 # model settings
 model = dict(
@@ -98,9 +99,9 @@ optimizer_config = dict(
     _delete_=True, grad_clip=dict(max_norm=35, norm_type=2))
 # learning policy
 lr_config = dict(
-    _delete_=True,
-    policy='cyclic',
-    target_ratio=(1, 0.01),
-    cyclic_times=12,
-    step_ratio_up=0.0)
+    policy='step',
+    warmup='constant',
+    warmup_iters=500,
+    warmup_ratio=1.0 / 3,
+    step=[8, 11])
 total_epochs = 12

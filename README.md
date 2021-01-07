@@ -24,6 +24,8 @@ Do you want to improve 1.0 AP for your object detector without any inference cos
 
 ## Updates
 
+- **2020.01.08** **Reimplement the code** and now it is more convenient, more flexible and easier to perform both the conventional training and SWA training. See [Instructions](#instructions).
+- **2020.01.07** Update to MMDetection v2.8.0.
 - **2020.12.24** Release the code.
 
 ## Installation
@@ -45,42 +47,35 @@ There are also tutorials for [finetuning models](docs/tutorials/finetune.md), [a
 
 Please refer to [FAQ](docs/faq.md) for frequently asked questions.
 
-## Getting Started
+## Instructions
 
-In this project, we mainly provide config files and helper scripts for training SWA object detectors. The config files are located in the [configs/swa directory](configs/swa) and the helper scripts in the [swa directory](swa).
+We add a [SWA training phase](https://github.com/hyz-xmaster/swa_object_detection/blob/master/mmdet/apis/train.py#L160) to the object detector training process,  implement a [SWA hook](mmdet/core/utils/swa_hook.py) that helps process averaged models, and write a [SWA config](configs/_base_/swa.py) for conveniently deploying SWA training in training various detectors. We also provide many [config files](configs/swa) for reproducing the results in the paper.
 
-We take training SWA Mask RCNN as an example to describe how to train an SWA object detector as well as evaluate it.
+By including the SWA config in detector config files and setting related parameters, you can have different SWA training modes.
 
-- Download the [pre-trained MaskRCNN-R101-2x-0.02-0.0002-40.8-36.6](http://download.openmmlab.com/mmdetection/v2.0/mask_rcnn/mask_rcnn_r101_fpn_2x_coco/mask_rcnn_r101_fpn_2x_coco_bbox_mAP-0.408__segm_mAP-0.366_20200505_071027-14b391c7.pth) from [Mask RCNN Model Zoo](configs/mask_rcnn/README.md) into the [checkpoints directory](checkpoints/mask_rcnn). This model achieves 40.8 bbox AP and 36.6 mask AP on the COCO val2017.
+1. **Two-pahse mode.** In this mode, the training will begin with the traditional training phase, and it continues for epochs. After that, SWA training will start, with loading the best model on the validation from the previous training phase (becasue `swa_load_from = 'best_bbox_mAP.pth'`in the SWA config).
 
-- Run the command below to start the training with the config file [swa_mask_rcnn_r101_fpn_2x_coco.py](configs/swa/swa_mask_rcnn_r101_fpn_2x_coco.py)
+    As shown in [swa_vfnet_r50 config](configs/swa/swa_vfnet_r50_fpn_1x_coco.py), the SWA config is included at [line 4](https://github.com/hyz-xmaster/swa_object_detection/blob/master/configs/swa/swa_vfnet_r50_fpn_1x_coco.py#L4) and only the SWA optimizer is reset at [line 118](https://github.com/hyz-xmaster/swa_object_detection/blob/master/configs/swa/swa_vfnet_r50_fpn_1x_coco.py#L118) in this script. Note that configuring parameters in local scripts will overwrite those values inherited from the SWA config.
 
-  ```
-  ./tools/dist_train.sh configs/swa/swa_mask_rcnn_r101_fpn_2x_coco.py 8 --cfg-options load_from=checkpoints/mask_rcnn/mask_rcnn_r101_fpn_2x_coco_bbox_mAP-0.408__segm_mAP-0.366_20200505_071027-14b391c7.pth work_dir=work_dirs/swa_mask_rcnn_r101_fpn_2x_coco
+    You can change those parameters that are included in the [SWA config](configs/_base_/swa.py) to use different optimizers or different learning rate schedules for the SWA training. For example, to use a different initial learning rate, say 0.02, you just need to set `swa_optimizer = dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001)` in the [SWA config](configs/_base_/swa.py) (global effect) or in the [swa_vfnet_r50 config](configs/swa/swa_vfnet_r50_fpn_1x_coco.py) (local effect).
 
-  ```
+    To start the training, run:
 
-  In this config file, we use the cyclical learning rate schedule for training. We set the upper bound of cyclical learning rates as the initial learning rate of the pre-trained model, i.e. 1x0.02 in this case, and the lower bound as 0.01x0.02 = 0.0002, through configuring `target_ratio=(1, 0.01)`. The cycle length is 1 epoch as `cyclic_times=24` for total 24 epochs.  This training starts from the previously downloaded pre-trained model and checkpoints are saved in `work_dirs/swa_mask_rcnn_r101_fpn_2x_coco`.
+    ```
+    ./tools/dist_train.sh configs/swa/swa_vfnet_r50_fpn_1x_coco.py 8
 
-- When the training is finished, run the script [get_swa_model.py](swa/get_swa_model.py) to get the final SWA model.
+    ```
 
-  ```
-  ./swa/get_swa_model.py work_dirs/swa_mask_rcnn_r101_fpn_2x_coco 1 12 --save_dir work_dirs/swa_mask_rcnn
+2. **Only-SWA mode.** In this mode, the traditional training is skipped and only the SWA training is performed. In general, this mode should work with a pre-trained detection model which you can download from the [MMDetection model zoo](docs/model_zoo.md).
 
-  ```
+    Have a look at the [swa_mask_rcnn_r101 config](configs/swa/swa_mask_rcnn_r101_fpn_2x_coco.py). By setting [`only_swa_training = True`](https://github.com/hyz-xmaster/swa_object_detection/blob/master/configs/swa/swa_mask_rcnn_r101_fpn_2x_coco.py#L4) and [`swa_load_from = mask_rcnn_pretraind_model`](https://github.com/hyz-xmaster/swa_object_detection/blob/master/configs/swa/swa_mask_rcnn_r101_fpn_2x_coco.py#L6), this script conducts only SWA training, starting from a pre-trained detection model. To start the training, run:
 
-  The average model swa_1-12.pth will be saved in `work_dirs/swa_mask_rcnn`.
+    ```
+    ./tools/dist_train.sh configs/swa/swa_mask_rcnn_r101_fpn_2x_coco.py 8
 
-- Finally, evaluate the SWA model on the COCO val2017:
+    ```
 
-  ```
-  ./tools/test.py configs/swa/swa_mask_rcnn_r101_fpn_2x_coco.py work_dirs/swa_mask_rcnn/swa_1-12.pth --eval bbox segm
-
-  ```
-
-  You are likely to get the result of 41.7 bbox AP and 37.4 mask AP, which are higher than the performance of the original model by 0.9 bbox AP and 0.8 mask AP respectively.
-
-If you would like to train other SWA object detectors, you only need to download related pre-trained models and follow the steps above with making corresponding changes to the commands. If you are interested in training an SWA object detector from scratch, please refer to the last paragraph of Section 3.1 in our paper.
+In both modes, we have implemented the validation stage and saving functions for the SWA model. Thus, it would be easy to monitor the performance and select the best SWA model.
 
 ## Results and Models
 

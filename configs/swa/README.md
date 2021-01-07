@@ -20,6 +20,6 @@
 | SWA-VFNet-R101-1x-0.01-0.0001-43.0-60.9-46.8                             | (44.3, +1.3) - (62.2, +1.3) - (48.3, +1.5)        | -                   | [model](https://drive.google.com/file/d/13tGeJBqzS1ITAaESMMDAaEHMrSJvA0g2/view?usp=sharing) &#124; [config](swa_vfnet_r101_fpn_1x_coco.py) |
 | SWA-VFNet-R101-2x-0.01-0.0001-43.5-61.3-47.2                             | (44.5, +1.0) - (62.4, +1.1) - (48.2, +1.0)        | -                   | [model](https://drive.google.com/file/d/1rJm0tcxWIjCDl6Np7MPR3OE6mwUDWwh0/view?usp=sharing) &#124; [config](swa_vfnet_r101_fpn_2x_coco.py) |
 
-
 **Notes:**
+
 - SWA-MaskRCNN-R50-1x-0.02-0.0002-(38.2, 34.7)-(58.8, 55.7)-(41.4, 37.2)  means this SWA model is produced based on the pre-trained Mask RCNN model that has a ResNet50 backbone, is trained under 1x schedule with the initial learning rate 0.02 and ending learning rate 0.0002, and achieves 38.2 bbox AP and 34.7 mask AP, 58.8 bbox AP<sub>50</sub> and 55.7 mask AP<sub>50</sub>, 41.4 bbox AP<sub>75</sub> and 37.2 mask AP<sub>75</sub> on the COCO val2017 respectively. This SWA model acheives 39.1 bbox AP, 59.6 bbox AP<sub>50</sub> and 42.8 bbox AP<sub>75</sub>, and 35.5 mask AP, 56.7 mask AP<sub>50</sub> and 37.8 mask AP<sub>75</sub>, which are higher than the pre-trained model by 0.9 bbox AP, 0.8 bbox AP<sub>50</sub> and 1.4 bbox AP<sub>75</sub>, and 0.8 mask AP, 1.0 mask AP<sub>50</sub>  and 0.6 mask AP<sub>75</sub> respectively. This rule applies to other object detectors.
