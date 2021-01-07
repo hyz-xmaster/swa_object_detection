@@ -4,6 +4,8 @@ from mmcv.runner import HOOKS, Hook
 from mmcv.runner.checkpoint import save_checkpoint
 from torch.optim.swa_utils import AveragedModel
 
+from mmdet.core import DistEvalHook, EvalHook
+
 
 @HOOKS.register_module()
 class SWAHook(Hook):
@@ -20,8 +22,15 @@ class SWAHook(Hook):
     """
 
     def __init__(self, swa_eval=True, eval_hook=None):
+        if not isinstance(swa_eval, bool):
+            raise TypeError('swa_eval must be a bool, but got'
+                            f'{type(swa_eval)}')
         if swa_eval:
-            assert eval_hook is not None
+            if not isinstance(eval_hook, EvalHook) or \
+                   isinstance(eval_hook, DistEvalHook):
+                raise TypeError('eval_hook must be either a EvalHook or a '
+                                'DistEvalHook when swa_eval = True, but got'
+                                f'{type(eval_hook)}')
         self.swa_eval = swa_eval
         self.eval_hook = eval_hook
 
@@ -30,6 +39,10 @@ class SWAHook(Hook):
         averages of the parameters of the model."""
         model = runner.model
         self.model = AveragedModel(model)
+        self.meta = runner.meta
+        if self.meta is None:
+            self.meta = dict()
+            self.meta.setdefault('hook_msgs', dict())
 
     def after_train_epoch(self, runner):
         """Update the parameters of the averaged model, save and evaluate the
@@ -44,10 +57,9 @@ class SWAHook(Hook):
         filename = 'swa_model_{}.pth'.format(runner.epoch + 1)
         filepath = osp.join(runner.work_dir, filename)
         optimizer = runner.optimizer
-        meta = runner.meta
-        meta['hook_msgs']['last_ckpt'] = filepath
+        self.meta['hook_msgs']['last_ckpt'] = filepath
         save_checkpoint(
-            self.model.module, filepath, optimizer=optimizer, meta=meta)
+            self.model.module, filepath, optimizer=optimizer, meta=self.meta)
 
         # evaluate the swa model
         if self.swa_eval:
@@ -56,7 +68,6 @@ class SWAHook(Hook):
             self.epoch = runner.epoch
             self.logger = runner.logger
             self.log_buffer = runner.log_buffer
-            self.meta = runner.meta
             self.meta['hook_msgs']['last_ckpt'] = filename
             self.eval_hook.after_train_epoch(self)
 
