@@ -1,5 +1,6 @@
-_base_ = ['../vfnet/vfnet_r50_fpn_1x_coco.py', '../_base_/swa.py']
-model = dict(pretrained='torchvision://resnet101', backbone=dict(depth=101))
+_base_ = ['../vfnet/vfnet_r101_fpn_2x_coco.py', '../_base_/swa.py']
+
+# swa optimizer
 swa_optimizer = dict(
     type='SGD',
     lr=0.01,

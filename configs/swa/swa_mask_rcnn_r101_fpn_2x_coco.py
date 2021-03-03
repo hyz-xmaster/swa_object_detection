@@ -1,5 +1,4 @@
-_base_ = ['../mask_rcnn/mask_rcnn_r50_fpn_2x_coco.py', '../_base_/swa.py']
-model = dict(pretrained='torchvision://resnet101', backbone=dict(depth=101))
+_base_ = ['../mask_rcnn/mask_rcnn_r101_fpn_2x_coco.py', '../_base_/swa.py']
 
 only_swa_training = True
 swa_training = True
@@ -15,4 +14,4 @@ swa_lr_config = dict(
     target_ratio=(1, 0.01),
     cyclic_times=24,
     step_ratio_up=0.0)
-swa_total_epochs = 24
+swa_runner = dict(type='EpochBasedRunner', max_epochs=24)
