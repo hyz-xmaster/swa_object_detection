@@ -20,6 +20,8 @@ swa_lr_config = dict(
     cyclic_times=12,
     step_ratio_up=0.0)
 swa_runner = dict(type='EpochBasedRunner', max_epochs=12)
+# the epoch interval to perform swa
+swa_interval = 1
 
 # swa checkpoint setting
 swa_checkpoint_config = dict(interval=1, filename_tmpl='swa_epoch_{}.pth')

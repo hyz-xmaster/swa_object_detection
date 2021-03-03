@@ -235,15 +235,17 @@ def train_detector(model,
         eval_hook = DistEvalHook if distributed else EvalHook
         swa_runner.register_hook(eval_hook(val_dataloader, **eval_cfg))
         swa_eval = True
-        # swa_eval_hook = eval_hook(
-        #     val_dataloader, save_best='bbox_mAP', **eval_cfg)
-        swa_eval_hook = eval_hook(val_dataloader, **eval_cfg)
+        swa_eval_hook = eval_hook(
+            val_dataloader, save_best='bbox_mAP', **eval_cfg)
     else:
         swa_eval = False
         swa_eval_hook = None
 
     # register swa hook
-    swa_hook = SWAHook(swa_eval=swa_eval, eval_hook=swa_eval_hook)
+    swa_hook = SWAHook(
+        swa_eval=swa_eval,
+        eval_hook=swa_eval_hook,
+        swa_interval=cfg.swa_interval)
     swa_runner.register_hook(swa_hook, priority='LOW')
 
     # register user-defined hooks

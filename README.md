@@ -24,6 +24,7 @@ Do you want to improve 1.0 AP for your object detector without any inference cos
 
 ## Updates
 
+- **2020.03.03** Update to MMDetection v2.10.0 and add swa_interval argument.
 - **2020.01.08** **Reimplement the code** and now it is more convenient, more flexible and easier to perform both the conventional training and SWA training. See [Instructions](#instructions).
 - **2020.01.07** Update to MMDetection v2.8.0.
 - **2020.12.24** Release the code.
