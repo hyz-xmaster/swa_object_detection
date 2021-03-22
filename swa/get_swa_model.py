@@ -25,7 +25,7 @@ def main():
     model_dir = args.model_dir
     starting_id = int(args.starting_model_id)
     ending_id = int(args.ending_model_id)
-    model_names = list(range(starting_id, ending_id))
+    model_names = list(range(starting_id, ending_id + 1))
     model_dirs = [
         os.path.join(model_dir, 'epoch_' + str(i) + '.pth')
         for i in model_names
